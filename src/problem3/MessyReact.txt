@@ -1,0 +1,22 @@
+List of Issues and fix suggestions
+
+1. Datasource class always gets instantiated inside the useEffect, so it will be done so on every render of component.
+   This affects performance, so we can move it outside the component.
+
+2. useEffect used inside a component can be untidy and may have unnecessary logic code to the component, also adds to number of useState used.
+   This can be moved into a React customHook, such as usePrices, which abstracts out the useEffect into another place.
+
+3. Datasource getPrices() will originally return a dictionary of currency:price, but it is more extensible to create an Interface and return the objects from the API,
+   such as a return type CurrencyPrices[]. This way, the class can be used in other components if needed, where the logic for the API call can be reused.
+
+4. getPriority method can also be moved outside just like Datasource class instantiation. It is also using raw values for priority comparison, which is not extensible if
+   we want to use this priority elsewhere. We can move this into an enum class with values. This can then be used in filtering instead of putting -99 in the filter function.
+
+5. In sortedBalance, usePriority is being called multiple times through the filter and sort. This can be reduced to one time by mapping priority to the WalletBalance object.
+   This can then be used for both filtering and sorting.
+
+6. In formattedBalances, the operation for getting usd price is done on every render even though prices and balances may be the same. So it is more efficient to move it into the useMemo
+   and put the usdPrice as an attribute of SortedWalletBalance.
+
+7. In future, if there are other CRUD operations on the list to be displayed, using index as a key is not desirable. it would be good to have another unique id attached to FormattedWalletBalance.
+   
